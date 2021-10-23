@@ -1,8 +1,12 @@
 # generic
 "image_dimension": 128
 "device": "cpu"  # cpu or cuda
-"rotation_augmentations": 50  # +/- in degrees
-"translation_augmentations": 0  # % translation of image before resizing
+"augmentations" : {
+  "rotation_augmentations": 50,  # +/- in degrees
+  "translation_augmentations": 0,  # % translation of image before resizing
+  "image_flips" : True
+}
+
 # for CNN
 "cnn_config" : {
   "model_configuraton": "VGG19_512_32_1",

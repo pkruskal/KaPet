@@ -13,6 +13,15 @@ class LearningRateConfig(BaseModel):
 	epocs: List[int]
 	rates: List[float]
 
+class AugmentationsConfig(BaseModel):
+	"""
+	Args:
+		epocs: (List[int])
+		rates: (List[float])
+	"""
+	image_flips : bool
+	rotation_augmentations: int
+	translation_augmentations: int
 
 class CNNConfig(BaseModel):
 	"""
@@ -45,8 +54,7 @@ class Config(BaseModel):
 	"""
 	image_dimension: int
 	device: DeviceChoice
-	rotation_augmentations: int
-	translation_augmentations: int
+
 	cnn_config: CNNConfig
 
 
