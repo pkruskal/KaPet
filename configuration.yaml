@@ -8,7 +8,7 @@
   "model_configuraton": "VGG19_512_32_1",
   "batch_size": 10,
   "epocs": 10,
-  "learning_rate": { #"learning_rate" : 0.001 # a single number will use the Adam optimizer, a list will use SGD as a schedule
+  "learning_rate": { # a single number will use the Adam optimizer, a list will use SGD as a schedule
     "epocs": [ 3,6,9 ],
     "rates": [ 0.001,0.0003,0.00001 ]
   }
