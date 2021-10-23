@@ -50,7 +50,15 @@ class Config(BaseModel):
 	cnn_config: CNNConfig
 
 
-def load_configuration(configuration_path : Path):
+def load_configuration(configuration_path : Path) -> Config:
+	"""
+
+	Args:
+		configuration_path: (Path) path to the desired yaml file
+
+	Returns:
+
+	"""
 	config_dict = {}
 	with configuration_path.open() as file:
 		config_dict = yaml.safe_load(file)
