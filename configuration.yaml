@@ -4,6 +4,8 @@
 "image_dimension": 128
 "image_shaping" : "resize"
 "device": "cpu"  # cpu or cuda
+
+# for image augmentation
 "augmentations" : {
   "rotation_augmentations": 50,  # +/- in degrees
   "translation_augmentations": [0,0],  # % translation of image before resizing
@@ -21,4 +23,9 @@
   }
 }
 
-
+# for regression
+"regression_config" : {
+  "features_to_use" : ['Subject Focus', 'Eyes', 'Face', 'Near', 'Action', 'Accessory',
+                       'Group', 'Collage', 'Human', 'Occlusion', 'Info', 'Blur'],
+  "regression_mode" : "dense_nn"
+}
