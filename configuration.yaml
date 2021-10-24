@@ -1,9 +1,12 @@
+# see configuration.py for documentation
+
 # generic
 "image_dimension": 128
+"image_shaping" : "resize"
 "device": "cpu"  # cpu or cuda
 "augmentations" : {
   "rotation_augmentations": 50,  # +/- in degrees
-  "translation_augmentations": 0,  # % translation of image before resizing
+  "translation_augmentations": [0,0],  # % translation of image before resizing
   "image_flips" : True
 }
 

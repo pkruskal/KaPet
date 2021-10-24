@@ -2,6 +2,7 @@ from torchvision import transforms
 from PIL import Image
 from configuration import Config
 import numpy as np
+from typing import Union, List
 
 normalization_transform = transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))
 
@@ -48,9 +49,10 @@ class PetfinderListingsTranform:
 			interpolation = Image.BICUBIC
 		)
 
-def image_shaping_transform(config : Config):
+def image_shaping_transform(
+		config : Config
+) -> Union[PetfinderListingsTranform,transforms.Resize]:
 	"""
-
 	Args:
 		config.cnn_config.image_dimension:
 		config.cnn_config.shaping [resize,crop]:
@@ -58,16 +60,17 @@ def image_shaping_transform(config : Config):
 			Crop cuts the image the same way petfinder does when it's displayed on the listing page
 
 	Returns:
+		a single transform either resizing or a custom croping based on petfinder
 
 	"""
-	if config.cnn_config.shaping == "resize":
-		transform = transforms.Resize((config.cnn_config.image_dimension, config.cnn_config.image_dimension), Image.BICUBIC),
-	elif config.cnn_config.shaping == "crop":
+	if config.image_shaping.value == "resize":
+		transform = transforms.Resize((config.image_dimension, config.image_dimension), Image.BICUBIC),
+	elif config.image_shaping.value == "crop":
 		transform = PetfinderListingsTranform(config)
 
 	return transform
 
-def transform_for_neural_network_formating():
+def transform_for_neural_network_formating() -> [transforms.ToTensor,transforms.Normalize]:
 	"""
 	Partial Transform to make sure the image is set up to be run by a NN
 	Resizes the image by reshaping opposed to cropping or padding
@@ -76,15 +79,19 @@ def transform_for_neural_network_formating():
 
 	:param config:
 	:return:
+	List[
+		transforms.ToTensor, make sure image is a tensor for processing with pyTorch
+		transforms.Normalize normaliz the image for the NN
+	]
 	"""
-	transform = transforms.Compose([
+	transform_list = [
 		transforms.ToTensor(),
 		normalization_transform
-	])
+	]
 
-	return transform
+	return transform_list
 
-def augmentation_transform(config : Config):
+def augmentation_transform(config : Config) -> [transforms.transforms.RandomTransforms, ...]:
 	"""
 	Tranforms the image for use by a CNN
 	also adds image augmentations for rotations and flips
@@ -93,16 +100,18 @@ def augmentation_transform(config : Config):
 	:param config:
 	:return:
 	"""
-	transform = transforms.Compose([
+	transform_list = [
 		transforms.RandomAffine(
-			degrees=config["rotation_augmentations"],
-			translate=(0,0)),
-		transforms.RandomHorizontalFlip()
-	])
+			degrees=config.augmentations.rotation_augmentations,
+			translate=config.augmentations.translation_augmentations
+		)
+	]
+	if config.augmentations.image_flips:
+		transform_list.append(transforms.RandomHorizontalFlip())
 
-	return transform
+	return transform_list
 
-def cnn_training_transform(config : Config):
+def cnn_training_transform(config : Config) -> transforms.Compose:
 	"""
 	Full set of transforms to prepair data for TRAINING a CNN from the configuration settings
 
@@ -113,14 +122,15 @@ def cnn_training_transform(config : Config):
 		a transform
 
 	"""
+	transforms_to_run = []
+	transforms_to_run.extend(augmentation_transform(config))
+	transforms_to_run.extend(image_shaping_transform(config))
+	transforms_to_run.extend(transform_for_neural_network_formating())
+	transform_compose = transforms.Compose(transforms_to_run)
 
-	transform = transforms.Compose([
-		augmentation_transform(config),
-		image_shaping_transform(config),
-		transform_for_neural_network_formating()
-	])
+	return transform_compose
 
-def cnn_inferencing_transform(config : Config):
+def cnn_inferencing_transform(config : Config) -> transforms.Compose:
 	"""
 	Full set of transforms to prepair data for INFERENCING on a CNN from the configuration settings
 
