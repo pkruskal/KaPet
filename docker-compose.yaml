@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  kapet:
+    build: .
+    image: kapet
+    volumes:
+      - ./lib:/home/kapet/lib
+      - ./data:/home/kapet/data
+    entrypoint: bash
+

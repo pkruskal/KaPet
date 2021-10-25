@@ -1,4 +1,8 @@
-# KaPet
+KaPet
+====
+
+# Summary
+https://www.kaggle.com/c/petfinder-adoption-prediction
 
 ## submissions and output
 Models are submitted as jupyter notebooks so all submissions should be in that form and saved in `/submissions`. 
@@ -14,5 +18,19 @@ Idealy the notebook is mostly just calling your classes and functions
 - build a simple CNN (or image transformer) to generate a feature array. 
 - add on features of the metadata and 
 
+# Dev setup
 
-  
+## Option 1: Docker 
+Build:
+```shell
+docker-compose build
+```
+
+Run bash environment:
+```shell
+docker-compose run --rm kapet 
+```
+
+## Option 2: local
+- Python 3.8 environment
+- `pip install -r requirements.txt`
