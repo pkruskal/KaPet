@@ -20,6 +20,9 @@ Idealy the notebook is mostly just calling your classes and functions
 
 # Dev setup
 
+Download data to the `./data` directory.
+https://www.kaggle.com/c/petfinder-adoption-prediction/data
+
 ## Option 1: Docker 
 Build:
 ```shell
