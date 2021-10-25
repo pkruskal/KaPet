@@ -24,7 +24,7 @@ Download data to the `./data` directory.
 https://www.kaggle.com/c/petfinder-adoption-prediction/data
 
 ## Option 1: Docker 
-Build:
+Build: (must rebuild anytime dependencies change)
 ```shell
 docker-compose build
 ```
