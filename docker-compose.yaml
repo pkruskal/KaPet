@@ -3,8 +3,10 @@ services:
   kapet:
     build: .
     image: kapet
+    ports:
+    - 8888:8888
     volumes:
       - ./lib:/home/kapet/lib
       - ./data:/home/kapet/data
-    entrypoint: bash
+    entrypoint: "jupyter lab --ip 0.0.0.0 --no-browser --allow-root"  # start jupyter lab
 
