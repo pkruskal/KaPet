@@ -2,11 +2,12 @@ from torch.utils.data import Dataset
 import torch
 from PIL import Image
 from constants import ColumnNames
+from image_transforms import cnn_inferencing_transform
 
-class Petfinder_dataset(Dataset):
+class PetfinderImageSet(Dataset):
 	"""Face Landmarks dataset."""
 
-	def __init__(self, data_folder, images_df, config, transform=None, ):
+	def __init__(self, config, data_folder, images_df, transform=None):
 		"""
 		images_df uses columns
 		"label" : integer to identify the target,
@@ -27,52 +28,28 @@ class Petfinder_dataset(Dataset):
 		if torch.is_tensor(idx):
 			idx = idx.tolist()
 
-		# img_name = os.path.join(self.data_folder,self.images_df.iloc[idx]['local_path'])
+		# process the image
 		img_name = self.images_df.iloc[idx][ColumnNames.image_path.value]
 		image = Image.open(img_name)
-
 		image.load()
-		# image = io.imread(img_name)
 
 		if self.transform:
 			image = self.transform(image)
+		else:
+			cnn_inferencing_transform(self.config)
 
-		# ToDo add a check for the metadata columns being corect
-		metadata =  self.images_df.iloc[idx][self.config["metadata_columns"]]
-
+		features = self.images_df.iloc[idx][self.config.regression_config.features_to_use]
 		labels = self.images_df.iloc[idx][ColumnNames.label.value]
 
+
 		sample = {
-			"image": torch.tensor(image, dtype=torch.float),
-			"features": torch.tensor(metadata, dtype=torch.float),
-			"labels": torch.tensor(labels, dtype=torch.float),
+			"image" : image,
+			"features" : torch.tensor(features, dtype=torch.float),
+			"labels" : labels
 		}
 
 		return sample
 
-	def test_data(self):
-		bad_data = []
-
-		for idx in range(self.__len__()):
-			if torch.is_tensor(idx):
-				idx = idx.tolist()
-
-			try:
-				# img_name = os.path.join(self.data_folder,self.images_df.iloc[idx]['local_path'])
-				img_name = self.images_df.iloc[idx][ColumnNames.image_path.value]
-				image = Image.open(img_name)
-				image.load()
-
-				if self.transform:
-					image = self.transform(image)
-
-			except Exception as e:
-				print(img_name, e)
-				bad_data.append(img_name)
-
-		if len(bad_data) == 0:
-			print('all data passed')
-		return bad_data
 
 
 class PawpularDataset:

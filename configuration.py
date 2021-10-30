@@ -37,9 +37,6 @@ class CNNConfig(BaseModel):
 	epocs: int
 	learning_rate: LearningRateConfig
 
-class RegressionModel(Enum):
-	"""Choices for a post image NN regression"""
-	dense_nn = 'dense_nn'
 
 class RegressionConfig(BaseModel):
 	"""
@@ -48,8 +45,8 @@ class RegressionConfig(BaseModel):
 		features_to_use: (list[str]) model configuration
 		regression_mode: (str)
 	"""
-	features_to_use = List[str]
-	regression_mode = RegressionModel
+	features_to_use : List[str]
+	regression_mode : str
 
 class DeviceChoice(Enum):
 	"""Choices for device"""
@@ -79,6 +76,7 @@ class Config(BaseModel):
 	device: DeviceChoice
 	augmentations : AugmentationsConfig
 	cnn_config: CNNConfig
+	regression_config: RegressionConfig
 
 
 def load_configuration(configuration_path : Path):
