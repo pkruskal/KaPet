@@ -39,13 +39,13 @@ class PetfinderImageSet(Dataset):
 			cnn_inferencing_transform(self.config)
 
 		features = self.images_df.iloc[idx][self.config.regression_config.features_to_use]
-		labels = self.images_df.iloc[idx][ColumnNames.label.value]
+		targets = self.images_df.iloc[idx][ColumnNames.label.value]
 
 
 		sample = {
 			"image" : image,
 			"features" : torch.tensor(features, dtype=torch.float),
-			"labels" : labels
+			"targets" : targets
 		}
 
 		return sample
