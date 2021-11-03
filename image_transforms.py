@@ -142,9 +142,9 @@ def cnn_inferencing_transform(config : Config) -> transforms.Compose:
 
 	"""
 
-	transform = transforms.Compose([
-		image_shaping_transform(config),
-		transform_for_neural_network_formating()
-	])
+	transforms_to_run = []
+	transforms_to_run.extend(image_shaping_transform(config))
+	transforms_to_run.extend(transform_for_neural_network_formating())
+	transform_compose = transforms.Compose(transforms_to_run)
 
-	return transform
+	return transform_compose
