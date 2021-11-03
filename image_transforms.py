@@ -132,7 +132,7 @@ def cnn_training_transform(config : Config) -> transforms.Compose:
 
 def cnn_inferencing_transform(config : Config) -> transforms.Compose:
 	"""
-	Full set of transforms to prepair data for INFERENCING on a CNN from the configuration settings
+	Full set of transforms to prepare data for INFERENCING on a CNN from the configuration settings
 
 	Args:
 		config: configuration class
@@ -142,9 +142,9 @@ def cnn_inferencing_transform(config : Config) -> transforms.Compose:
 
 	"""
 
-	transform = transforms.Compose([
-		image_shaping_transform(config),
-		transform_for_neural_network_formating()
-	])
+	transforms_to_run = []
+	transforms_to_run.extend(image_shaping_transform(config))
+	transforms_to_run.extend(transform_for_neural_network_formating())
+	transform = transforms.Compose(transforms_to_run)
 
 	return transform
