@@ -3,7 +3,7 @@
 # generic
 "image_dimension": 128
 "image_shaping" : "resize"
-"device": "cpu"  # cpu or cuda
+"device": "cuda"  # cpu or cuda
 
 # for image augmentation
 "augmentations" : {

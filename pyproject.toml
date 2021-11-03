@@ -19,6 +19,8 @@ tqdm = "^4.62.3"
 scikit-learn = "^1.0"
 scikit-image = "^0.18.3"
 PyYAML = "^6.0"
+psutil
+tensorboard
 
 
 [tool.poetry.dev-dependencies]
