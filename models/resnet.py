@@ -18,11 +18,23 @@ def check_model_name(model_name):
 class PawpularResnetModel(BaseRegressionModel):
 	"""
 	This resnet generic model makes use of the torch image models module (timm)
-	and adheres to the tez.model framework by adding
-	a loss method and a monitor_metrics method both called and output in the forward method.
 
-	Instead of acting as a classifyer, this resnet model extracts a latent feature space from the images.
-	This latent space in addition to any other features can then be used for a final regression model.
+	there is a rich history of resnet models
+
+	To see valid model_names try
+	[m for m in timm.list_models() if len(re.findall("^resnet",m)) > 0]
+
+	For more information on these see
+	https://github.com/rwightman/pytorch-image-models/blob/master/timm/models/resnet.py
+	https://github.com/rwightman/pytorch-image-models/blob/master/timm/models/resnetv2.py
+
+	cross stage partial resnets
+	[m for m in timm.list_models() if len(re.findall("^cspresnet",m)) > 0]
+	https://github.com/WongKinYiu/CrossStagePartialNetworks
+
+	efficient channel attention resnets
+	[m for m in timm.list_models() if len(re.findall("^ecaresnet",m)) > 0]
+	https://sotabench.com/paper/eca-net-efficient-channel-attention-for-deep
 
 	"""
 
