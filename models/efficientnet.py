@@ -26,35 +26,31 @@ class PawpularEfficientNetModel(BaseRegressionModel):
 
 	def __init__(
 			self,
-			model_name,
-			learning_rate,
-			number_of_latent_image_features = 128,
-			number_of_additional_features = 12,
-			number_of_intermediate_regression_variables =64,
-			regression_dropout = 0.1,
-			model_drop_rate=0
+			model_name: str,
+			learning_rate: float,
+			number_of_latent_image_features: int = 128,
+			number_of_additional_features: int = 12,
+			number_of_intermediate_regression_variables: int =64,
+			regression_dropout: float = 0.1,
+			regression_activation_function: nn.Module = nn.Identity(),
+			model_drop_rate=0,
 	) -> nn.Module:
 		"""
 		Args:
-			model_name: (str) associated with from timm's resnet models
-				https://github.com/rwightman/pytorch-image-models/blob/master/timm/models/resnet.py
-			learning_rate : (float)
-			number_of_resnet_features: (int) how many latent features will be trained by the resnet cnn backbone
-			number_of_additional_features: (int) number of features being added to the resnet cnn backbone
-			number_of_intermediate_dense_variables (int) number of latent variables to use for the
-				non CNN feed forward output model
-			drop_rate: (float) 0-1 default 0 the dropout rate within the resnet architecture
+			see BaseRegressionModel for all other args
+			model_drop_rate: (float between 0 and 1) dropout rate used in the efficient net model
 		"""
 		super().__init__(
-			model_name,
-			learning_rate,
-			number_of_latent_image_features,
-			number_of_additional_features,
-			number_of_intermediate_regression_variables,
-			regression_dropout
+			model_name=model_name,
+			learning_rate=learning_rate,
+			number_of_latent_image_features=number_of_latent_image_features,
+			number_of_additional_features=number_of_additional_features,
+			number_of_intermediate_regression_variables=number_of_intermediate_regression_variables,
+			regression_dropout=regression_dropout,
+			regression_activation_function=regression_activation_function
 		)
 
-		# initalize a resnet model
+		# initialize and set the resnet model
 		self.model = timm.create_model(
 			model_name,
 			pretrained=False,
@@ -62,3 +58,5 @@ class PawpularEfficientNetModel(BaseRegressionModel):
 			num_classes=number_of_latent_image_features,
 			drop_rate=model_drop_rate
 		)
+
+		self.learning_rate = learning_rate

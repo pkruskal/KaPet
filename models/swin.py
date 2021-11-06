@@ -1,9 +1,6 @@
 import timm
-
-from models.base_image_regression_model import (
-	BaseRegressionModel,
-	optim
-)
+from torch import nn
+from models.base_image_regression_model import BaseRegressionModel
 
 class PawpularSwinModel(BaseRegressionModel):
 	"""
@@ -14,13 +11,15 @@ class PawpularSwinModel(BaseRegressionModel):
 
 	To see valid model_names try
 	[m for m in timm.list_models() if "swin" in m]
+	e.x.
+		"swin_base_patch4_window7_224"
+		"swin_base_patch4_window12_384"
+		"swin_large_patch4_window7_224"
+
 
 	For more information on these configurations see
 	https://github.com/rwightman/pytorch-image-models/blob/master/timm/models/swin_transformer.py
 	https://github.com/microsoft/Swin-Transformer/tree/main/configs
-
-
-
 
 	See BaseRegressionModel for documentation on this class
 
@@ -28,21 +27,28 @@ class PawpularSwinModel(BaseRegressionModel):
 
 	def __init__(
 			self,
-			model_name,
-			learning_rate,
-			number_of_latent_image_features = 128,
-			number_of_additional_features = 12,
-			number_of_intermediate_regression_variables =64,
-			regression_dropout = 0.1,
-			image_size = 128
+			model_name: str,
+			learning_rate: float,
+			number_of_latent_image_features: int = 128,
+			number_of_additional_features: int = 12,
+			number_of_intermediate_regression_variables: int = 64,
+			regression_dropout: float = 0.1,
+			regression_activation_function: nn.Module = nn.Identity(),
+			image_size: int = 384
 	):
+		"""
+
+		:param image_size: (int) for initializeing the swin model we need to state the image size explicitly here.
+			Note different swin models expect different image sizes using timm
+		"""
 		super().__init__(
-			model_name,
-			learning_rate,
-			number_of_latent_image_features,
-			number_of_additional_features,
-			number_of_intermediate_regression_variables,
-			regression_dropout
+			model_name=model_name,
+			learning_rate=learning_rate,
+			number_of_latent_image_features=number_of_latent_image_features,
+			number_of_additional_features=number_of_additional_features,
+			number_of_intermediate_regression_variables=number_of_intermediate_regression_variables,
+			regression_dropout=regression_dropout,
+			regression_activation_function=regression_activation_function
 		)
 
 		self.model = timm.create_model(
@@ -53,12 +59,4 @@ class PawpularSwinModel(BaseRegressionModel):
 			num_classes = number_of_latent_image_features
 		)
 
-	def fetch_optimizer(self):
-		opt = optim.Adam(self.parameters(), lr=self.learning_rate)
-		return opt
-
-	def fetch_scheduler(self):
-		schedule = optim.lr_scheduler.CosineAnnealingWarmRestarts(
-			self.optimizer, T_0=3, T_mult=2, eta_min=1e-8, last_epoch=-1
-		)
-		return schedule
+		self.learning_rate = learning_rate
