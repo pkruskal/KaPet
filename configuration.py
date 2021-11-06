@@ -70,6 +70,7 @@ class Config(BaseModel):
 		rotation_augmentations: (int) +/- in degrees
 		translation_augmentations: (int) % translation of image before resizing
 		cnn_config: (CNNConfig) configuration for CNN
+		regression_config: (RegressionConfig) configuration for the regression step of the CNN
 	"""
 	image_dimension: int
 	image_shaping : ImageShapings

@@ -106,6 +106,9 @@ class BaseRegressionModel(tez.Model):
         """
         if type(targets) == Tensor:
 
+            #prediction = prediction.cpu().detach().numpy()
+            #targets = targets.cpu().detach().numpy()
+
             sum_squared_error = nn.MSELoss(reduction="sum")(prediction, targets)
             standard_error = (sum_squared_error.sqrt() / (prediction.shape[0] - 2))
 
@@ -319,14 +322,24 @@ class BaseReLURegressionModel(tez.Model):
 
         return output, loss, metric_dict
 
-    def fetch_optimizer(self) -> optim.Optimizer:
-        """
+    def fetch_optimizer(self):
+        opt = optim.Adam(self.parameters(), lr=self.learning_rate)
+        return opt
 
-        ToDo fetch_optimizer needs to be able to account for arbitrary optimizers
-        ToDo fetch_optimizer needs to be able to follow a learning rate schedule when doing SGD by reading the epoch
+    def fetch_scheduler(self):
+        """
+        Allows adjustment of of learning rate depending on epoch.
+
+        Default is a Cosine Annealing with warm restarts.
+
+        Learning rate is decreased to eta_min over T_0 epochs. then it's reset.
+        Then learning rate is decreased to eta_min over T_1 epocs, ... to T_n
+        where
+        T_n = T_n-1 * T_mult
 
         :return:
         """
-        lr = self.learning_rate
-        optimizer = optim.Adam(self.parameters(), lr=lr)
-        return optimizer
+        schedule = optim.lr_scheduler.CosineAnnealingWarmRestarts(
+            self.optimizer, T_0=3, T_mult=2, eta_min=1e-8, last_epoch=-1
+        )
+        return schedule

@@ -1,6 +1,9 @@
 import timm
 
-from base_image_regression_model import BaseRegressionModel
+from models.base_image_regression_model import (
+	BaseRegressionModel,
+	optim
+)
 
 class PawpularSwinModel(BaseRegressionModel):
 	"""
@@ -50,3 +53,12 @@ class PawpularSwinModel(BaseRegressionModel):
 			num_classes = number_of_latent_image_features
 		)
 
+	def fetch_optimizer(self):
+		opt = optim.Adam(self.parameters(), lr=self.learning_rate)
+		return opt
+
+	def fetch_scheduler(self):
+		schedule = optim.lr_scheduler.CosineAnnealingWarmRestarts(
+			self.optimizer, T_0=3, T_mult=2, eta_min=1e-8, last_epoch=-1
+		)
+		return schedule

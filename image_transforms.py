@@ -26,7 +26,7 @@ class PetfinderListingsTranform:
 			transform
 
 		"""
-		[width,height] = transforms.functional.get_image_size(image)
+		[width,height] = transforms.functional._get_image_size(image)
 		if width > height:
 			top = height
 			left = np.floor(width-height/2)
@@ -45,7 +45,7 @@ class PetfinderListingsTranform:
 			left = left,
 			height =crop_height,
 			width = crop_width,
-			size = (self.config.cnn_config.image_dimention, self.config.cnn_config.image_dimention),
+			size = (self.config.image_dimension, self.config.image_dimension),
 			interpolation = Image.BICUBIC
 		)
 
@@ -124,7 +124,7 @@ def cnn_training_transform(config : Config) -> transforms.Compose:
 	"""
 	transforms_to_run = []
 	transforms_to_run.extend(augmentation_transform(config))
-	transforms_to_run.extend(image_shaping_transform(config))
+	transforms_to_run.append(image_shaping_transform(config))
 	transforms_to_run.extend(transform_for_neural_network_formating())
 	transform_compose = transforms.Compose(transforms_to_run)
 
@@ -143,7 +143,7 @@ def cnn_inferencing_transform(config : Config) -> transforms.Compose:
 	"""
 
 	transforms_to_run = []
-	transforms_to_run.extend(image_shaping_transform(config))
+	transforms_to_run.append(image_shaping_transform(config))
 	transforms_to_run.extend(transform_for_neural_network_formating())
 	transform = transforms.Compose(transforms_to_run)
 
