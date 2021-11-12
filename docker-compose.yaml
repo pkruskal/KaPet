@@ -5,6 +5,6 @@ services:
     image: kapet
     volumes:
       - ./lib:/home/kapet/lib
-      - ./data:/home/kapet/data
+      - ./input:/home/kapet/input
     entrypoint: bash
 
