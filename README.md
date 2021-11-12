@@ -4,6 +4,9 @@ KaPet
 # Summary
 https://www.kaggle.com/c/petfinder-adoption-prediction
 
+# Summary
+https://www.kaggle.com/c/petfinder-adoption-prediction
+
 ## Submissions and output
 Models are submitted as jupyter notebooks so all submissions should be in that form and saved in `/submissions`. 
 Packages and code can be uploaded to Kaggles servers and then imported in your notebook.
@@ -20,7 +23,7 @@ See `configuration.py` for documentation on configuration paramaters
 
 # Dev setup
 ## Data
-Download data to the `./data` directory.
+Download data to the `./input` directory.
 https://www.kaggle.com/c/petfinder-adoption-prediction/data
 
 ## Option 1: Docker environment

@@ -7,6 +7,6 @@ services:
     - 8888:8888
     volumes:
       - ./lib:/home/kapet/lib
-      - ./data:/home/kapet/data
+      - ./input:/home/kapet/input
     entrypoint: "jupyter lab --ip 0.0.0.0 --no-browser --allow-root"  # start jupyter lab
 
