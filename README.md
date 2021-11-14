@@ -1,8 +1,6 @@
 KaPet
 ====
 
-# Summary
-https://www.kaggle.com/c/petfinder-adoption-prediction
 
 # Summary
 https://www.kaggle.com/c/petfinder-adoption-prediction
@@ -51,3 +49,4 @@ docker-compose run --rm --entrypoint bash kapet
 ## Option 2: local environment
 - Python 3.8 environment
 - `pip install -r requirements.txt`
+

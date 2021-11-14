@@ -4,6 +4,8 @@
 "image_dimension": 128
 "image_shaping" : "resize"
 "device": "cpu"  # cpu or cuda
+
+# for image augmentation
 "augmentations" : {
   "rotation_augmentations": 50,  # +/- in degrees
   "translation_augmentations": [0,0],  # % translation of image before resizing
@@ -12,7 +14,7 @@
 
 # for CNN
 "cnn_config" : {
-  "model_configuraton": "VGG19_512_32_1",
+  "model_configuraton": "resnet34",
   "batch_size": 10,
   "epocs": 10,
   "learning_rate": { # a single number will use the Adam optimizer, a list will use SGD as a schedule
@@ -21,4 +23,9 @@
   }
 }
 
-
+# for regression
+"regression_config" : {
+  "features_to_use" : ['Subject Focus', 'Eyes', 'Face', 'Near', 'Action', 'Accessory',
+                       'Group', 'Collage', 'Human', 'Occlusion', 'Info', 'Blur'],
+  "regression_mode" : "dense_nn"
+}

@@ -38,6 +38,16 @@ class CNNConfig(BaseModel):
 	learning_rate: LearningRateConfig
 
 
+class RegressionConfig(BaseModel):
+	"""
+	For paramaters for performing feature regression
+	Args:
+		features_to_use: (list[str]) model configuration
+		regression_mode: (str)
+	"""
+	features_to_use : List[str]
+	regression_mode : str
+
 class DeviceChoice(Enum):
 	"""Choices for device"""
 	cpu = 'cpu'
@@ -66,6 +76,7 @@ class Config(BaseModel):
 	device: DeviceChoice
 	augmentations : AugmentationsConfig
 	cnn_config: CNNConfig
+	regression_config: RegressionConfig
 
 
 def load_configuration(configuration_path : Path):
