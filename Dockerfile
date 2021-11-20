@@ -18,6 +18,9 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 
+####
+# Adding GPU support with pytorch base
+####
 FROM anibali/pytorch:1.10.0-cuda11.3 as kapet_gpu
 
 # Install libraries
