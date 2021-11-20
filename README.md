@@ -27,12 +27,20 @@ https://www.kaggle.com/c/petfinder-adoption-prediction/data
 ## Option 1: Docker environment
  Build: (must rebuild anytime dependencies change)
 ```shell
-docker-compose build
+docker-compose build kapet
+```
+for gpu support
+```shell
+docker-compose build kapet_gpu
 ```
 
 Run jupyter lab:
 ```shell
-docker-compose up 
+docker-compose up kapet
+```
+for gpu support
+```shell
+docker-compose up kapet_gpu
 ```
 then follow the link in your local browser (`http://127.0.0.1:8888/lab?token=xxxx`) 
 
