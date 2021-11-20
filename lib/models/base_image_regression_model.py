@@ -10,7 +10,7 @@ from torch import cat as concat_tensors
 import tez
 import timm
 
-from utils import RMSELoss
+from lib.utils import RMSELoss
 
 class BaseRegressionModel(tez.Model):
     """

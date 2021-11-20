@@ -10,6 +10,7 @@ services:
     volumes:
       - ./lib:/home/kapet/lib
       - ./input:/home/kapet/input
+      - ./notebooks:/home/kapet/notebooks
     entrypoint: "jupyter lab --ip 0.0.0.0 --no-browser --allow-root"  # start jupyter lab
 
   kapet_gpu:
@@ -23,5 +24,6 @@ services:
     volumes:
       - ./lib:/home/kapet/lib
       - ./input:/home/kapet/input
+      - ./notebooks:/home/kapet/notebooks
     entrypoint: "jupyter lab --ip 0.0.0.0 --no-browser --allow-root"  # start jupyter lab
 
