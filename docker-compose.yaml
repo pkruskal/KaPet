@@ -2,7 +2,7 @@ version: "3.9"
 services:
   kapet:
     build:
-      context: scratch
+      context: .
       target: kapet
     image: kapet
     ports:
@@ -10,10 +10,10 @@ services:
     volumes:
       - ./lib:/home/kapet/lib
       - ./input:/home/kapet/input
-    entrypoint: "jupyter lab --ip 0.0.0.0 --no-browser --allow-root --gpus all"  # start jupyter lab
+    entrypoint: "jupyter lab --ip 0.0.0.0 --no-browser --allow-root"  # start jupyter lab
   kapet_gpu:
     build:
-      context: scratch
+      context: .
       target: kapet_gpu
     runtime: nvidia
     image: kapet
@@ -22,20 +22,4 @@ services:
     volumes:
       - ./lib:/home/kapet/lib
       - ./input:/home/kapet/input
-    entrypoint: "jupyter lab --ip 0.0.0.0 --no-browser --allow-root --gpus all"  # start jupyter lab
-  #kapet_gpu:
-  #  build: .
-  #  image: kapet_gpu
-  #  ports:
-  #  - 8888:8888
-  #  volumes:
-  #    - ./lib:/home/kapet/lib
-  #    - ./input:/home/kapet/input
-  #  deploy: # requires docker-compose v1.28+
-  #    resources:
-  #      reservations:
-  #        devices:
-  #          - driver: nvidia
-  #            count: all
-  #            capabilities: [gpu]
-  #  entrypoint: "jupyter lab --ip 0.0.0.0 --no-browser --allow-root"  # start jupyter lab
+    entrypoint: "jupyter lab --ip 0.0.0.0 --no-browser --allow-root"  # start jupyter lab
