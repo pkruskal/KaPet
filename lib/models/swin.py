@@ -1,6 +1,6 @@
 import timm
 from torch import nn
-from lib.models.base_image_regression_model import BaseRegressionModel
+from models.base_image_regression_model import BaseRegressionModel
 
 class PawpularSwinModel(BaseRegressionModel):
 	"""

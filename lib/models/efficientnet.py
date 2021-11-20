@@ -1,7 +1,7 @@
 from torch import nn
 import timm
 
-from lib.models.base_image_regression_model import BaseRegressionModel
+from models.base_image_regression_model import BaseRegressionModel
 
 
 class PawpularEfficientNetModel(BaseRegressionModel):

@@ -32,7 +32,7 @@ class CNNConfig(BaseModel):
 		epocs: (int) epocs
 		learning_rate: (LearningRateConfig)
 	"""
-	model_configuraton: str
+	model_configuration: str
 	batch_size: int
 	epocs: int
 	learning_rate: LearningRateConfig

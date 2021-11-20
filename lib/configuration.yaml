@@ -14,13 +14,10 @@
 
 # for CNN
 "cnn_config" : {
-  "model_configuraton": "resnetv2_101x1_bitm",
+  "model_configuration": "resnetv2_101x1_bitm",
   "batch_size": 16,
   "epocs": 10,
-  "learning_rate": { # a single number will use the Adam optimizer, a list will use SGD as a schedule
-    "epocs": [ 3,6,9 ],
-    "rates": [ 0.001,0.0003,0.00001 ]
-  }
+  "learning_rate": 0.00002
 }
 
 # for regression
