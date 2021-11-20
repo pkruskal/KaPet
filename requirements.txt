@@ -1,0 +1,14 @@
+torch
+torchvision
+torchaudio
+numpy
+pydantic
+matplotlib
+loguru
+seaborn
+tqdm
+scikit-learn
+scikit-image
+PyYAML
+pandas
+jupyterlab
