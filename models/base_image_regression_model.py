@@ -187,6 +187,8 @@ class BaseRegressionModel(tez.Model):
     def fetch_scheduler(self) -> optim.lr_scheduler._LRScheduler:
         """
         Allows adjustment of of learning rate depending on epoch.
+        A good reference for this is here
+        https://www.kaggle.com/isbhargav/guide-to-pytorch-learning-rate-scheduling
 
         Default is a Cosine Annealing with warm restarts.
 
@@ -202,3 +204,4 @@ class BaseRegressionModel(tez.Model):
             self.optimizer, T_0=3, T_mult=2, eta_min=1e-8, last_epoch=-1
         )
         return schedule
+

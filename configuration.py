@@ -28,12 +28,14 @@ class CNNConfig(BaseModel):
 	"""
 	Args:
 		model_configuraton: (str) model configuration
-		batchsize: (int) batch size
+		batch_size: (int) batch_size*batch_accumilation is the number of images to calculate loss before updating weights
+		batch_accumilation: (int) used with batch_size if the desired batch size can't fit in GPU memory
 		epocs: (int) epocs
 		learning_rate: (LearningRateConfig)
 	"""
 	model_configuraton: str
 	batch_size: int
+	batch_accumilation : int
 	epocs: int
 	learning_rate: LearningRateConfig
 

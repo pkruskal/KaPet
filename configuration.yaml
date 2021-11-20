@@ -1,8 +1,8 @@
 # see configuration.py for documentation
 
 # generic
-"image_dimension": 128
-"image_shaping" : "crop"
+"image_dimension": 384
+"image_shaping" : "resize"
 "device": "cuda"  # cpu or cuda
 
 # for image augmentation
@@ -15,7 +15,8 @@
 # for CNN
 "cnn_config" : {
   "model_configuraton": "resnetv2_101x1_bitm",
-  "batch_size": 16,
+  "batch_size": 2,
+  "batch_accumilation" : 8,
   "epocs": 10,
   "learning_rate": { # a single number will use the Adam optimizer, a list will use SGD as a schedule
     "epocs": [ 3,6,9 ],
