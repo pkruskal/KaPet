@@ -28,13 +28,13 @@ class PetfinderListingsTranform:
 		"""
 		[width,height] = transforms.functional._get_image_size(image)
 		if width > height:
-			top = height
-			left = np.floor(width-height/2)
+			top = 0
+			left = np.floor((width-height)/2)
 			crop_height =height
 			crop_width=height
 		else:
-			top = np.floor(height-width/2)
-			left = width
+			top = np.floor((height-width)/2)
+			left = 0
 			crop_height =width
 			crop_width=width
 
@@ -64,7 +64,7 @@ def image_shaping_transform(
 
 	"""
 	if config.image_shaping.value == "resize":
-		transform = transforms.Resize((config.image_dimension, config.image_dimension), Image.BICUBIC),
+		transform = transforms.Resize((config.image_dimension, config.image_dimension), Image.BICUBIC)
 	elif config.image_shaping.value == "crop":
 		transform = PetfinderListingsTranform(config)
 

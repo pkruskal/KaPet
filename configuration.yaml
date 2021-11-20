@@ -1,8 +1,8 @@
 # see configuration.py for documentation
 
 # generic
-"image_dimension": 128
-"image_shaping" : "crop"
+"image_dimension": 384
+"image_shaping" : "resize"
 "device": "cuda"  # cpu or cuda
 
 # for image augmentation
@@ -26,6 +26,18 @@
 # for regression
 "regression_config" : {
   "features_to_use" : ['Subject Focus', 'Eyes', 'Face', 'Near', 'Action', 'Accessory',
-                       'Group', 'Collage', 'Human', 'Occlusion', 'Info', 'Blur'],
+                       'Group', 'Collage', 'Human', 'Occlusion', 'Info', 'Blur','black', 'white',
+                       'pixel_width', 'dominant_red', 'dominant_green', 'dominant_blue',
+                       'avg_red', 'avg_green', 'avg_blue', 'bluriness_score',
+                       'scale_0_alpha', 'scale_0_std',
+                       'scale_0_shift_1_mean',
+                       'scale_0_shift_2_mean',
+                       'scale_0_shift_3_mean',
+                       'scale_0_shift_4_mean','scale_1_alpha', 'scale_1_std',
+                       'scale_1_shift_1_mean',
+                       'scale_1_shift_2_mean',
+                       'scale_1_shift_3_mean',
+                       'scale_1_shift_4_mean',
+                       'brisque', 'tv'],
   "regression_mode" : "dense_nn"
 }
