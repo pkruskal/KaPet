@@ -17,8 +17,14 @@ services:
     build:
       context: .
       target: kapet_gpu
-    runtime: nvidia
-    image: kapet
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [ gpu ]
+    image: kapet_gpu
     ports:
     - 8888:8888
     volumes:
