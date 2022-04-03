@@ -25,9 +25,8 @@ class PetfinderImageSet(Dataset):
 		return self.images_df.shape[0]
 	# return len(self.landmarks_frame)
 
-	def _load_and_prepare_image(self,image_path:Path):
+	def __load_and_prepare_image__(self,image_path:Path):
 		"""
-
 		Args:
 			image_path: loads an image and runs transforms before using it in a databatch
 
@@ -38,6 +37,7 @@ class PetfinderImageSet(Dataset):
 		image = Image.open(image_path)
 		image.load()
 
+		# apply transforms for training including normalization, resizing, and augmentations
 		if self.transform:
 			image = self.transform(image)
 		else:
@@ -65,7 +65,7 @@ class PetfinderImageSet(Dataset):
 
 		# process the image
 		img_name = self.images_df.iloc[idx][ColumnNames.image_path.value]
-		image = self._load_and_prepare_image(Path(img_name))
+		image = self.__load_and_prepare_image__(Path(img_name))
 
 		features = self.images_df.iloc[idx][self.config.regression_config.features_to_use]
 		targets = self.images_df.iloc[idx][ColumnNames.label.value]
