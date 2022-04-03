@@ -3,6 +3,7 @@ import torch
 from PIL import Image
 from lib.constants import ColumnNames
 from lib.image_transforms import cnn_inferencing_transform
+from pathlib import Path
 
 class PetfinderImageSet(Dataset):
 	"""Face Landmarks dataset."""
@@ -24,13 +25,17 @@ class PetfinderImageSet(Dataset):
 		return self.images_df.shape[0]
 	# return len(self.landmarks_frame)
 
-	def __getitem__(self, idx):
-		if torch.is_tensor(idx):
-			idx = idx.tolist()
+	def _load_and_prepare_image(self,image_path:Path):
+		"""
 
-		# process the image
-		img_name = self.images_df.iloc[idx][ColumnNames.image_path.value]
-		image = Image.open(img_name)
+		Args:
+			image_path: loads an image and runs transforms before using it in a databatch
+
+		Returns:
+			a PIL image
+
+		"""
+		image = Image.open(image_path)
 		image.load()
 
 		if self.transform:
@@ -38,9 +43,32 @@ class PetfinderImageSet(Dataset):
 		else:
 			cnn_inferencing_transform(self.config)
 
+		return image
+
+	def __getitem__(self, idx):
+		"""
+		Standard dataloader method used by pytorch for returning a batch of data
+		Args:
+			idx:  indicies for the data batch
+
+		Returns:
+			a batch of data for training as a dictionary including
+			{
+				image : 3D image
+				features : array of feature values
+				target : labeled score
+			}
+
+		"""
+		if torch.is_tensor(idx):
+			idx = idx.tolist()
+
+		# process the image
+		img_name = self.images_df.iloc[idx][ColumnNames.image_path.value]
+		image = self._load_and_prepare_image(Path(img_name))
+
 		features = self.images_df.iloc[idx][self.config.regression_config.features_to_use]
 		targets = self.images_df.iloc[idx][ColumnNames.label.value]
-
 
 		sample = {
 			"image" : image,
