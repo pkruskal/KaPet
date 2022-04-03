@@ -37,7 +37,7 @@ class CNNConfig(BaseModel):
 	batch_size: int
 	batch_accumilation : int
 	epocs: int
-	learning_rate: LearningRateConfig
+	learning_rate: float
 
 
 class RegressionConfig(BaseModel):

@@ -1,8 +1,8 @@
 from torch.utils.data import Dataset
 import torch
 from PIL import Image
-from constants import ColumnNames
-from image_transforms import cnn_inferencing_transform
+from lib.constants import ColumnNames
+from lib.image_transforms import cnn_inferencing_transform
 
 class PetfinderImageSet(Dataset):
 	"""Face Landmarks dataset."""
