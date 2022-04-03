@@ -1,6 +1,6 @@
 from torchvision import transforms
 from PIL import Image
-from configuration import Config
+from lib.configuration import Config
 import numpy as np
 from typing import Union, List
 
@@ -9,6 +9,7 @@ normalization_transform = transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(
 class PetfinderListingsTranform:
 	"""
 	This transform mimicks the transform that is performed by the petfinder website for images that are listed.
+	Uses `transforms.functional.resized_crop`
 	"""
 
 	def __init__(self, config):
@@ -26,15 +27,21 @@ class PetfinderListingsTranform:
 			transform
 
 		"""
-		[width,height] = transforms.functional.get_image_size(image)
+		[width,height] = transforms.functional._get_image_size(image)
+
+		# Get the coordinates for creating an image crop along the largest dimension used by pytorch's crop function
 		if width > height:
-			top = height
-			left = np.floor(width-height/2)
+			# crop the width by setting the "left" coordinate so the crop is centered
+			top = 0
+			left = np.floor((width-height)/2)
+			# final sizes will be based on the height
 			crop_height =height
 			crop_width=height
 		else:
-			top = np.floor(height-width/2)
-			left = width
+			# crop the height by setting the "top" coordinate so the crop is centered
+			top = np.floor((height-width)/2)
+			left = 0
+			# final sizes will be based on the width
 			crop_height =width
 			crop_width=width
 
@@ -45,7 +52,7 @@ class PetfinderListingsTranform:
 			left = left,
 			height =crop_height,
 			width = crop_width,
-			size = (self.config.cnn_config.image_dimention, self.config.cnn_config.image_dimention),
+			size = (self.config.image_dimension, self.config.image_dimension),
 			interpolation = Image.BICUBIC
 		)
 
@@ -64,7 +71,7 @@ def image_shaping_transform(
 
 	"""
 	if config.image_shaping.value == "resize":
-		transform = transforms.Resize((config.image_dimension, config.image_dimension), Image.BICUBIC),
+		transform = transforms.Resize((config.image_dimension, config.image_dimension), Image.BICUBIC)
 	elif config.image_shaping.value == "crop":
 		transform = PetfinderListingsTranform(config)
 
@@ -91,7 +98,7 @@ def transform_for_neural_network_formating() -> [transforms.ToTensor,transforms.
 
 	return transform_list
 
-def augmentation_transform(config : Config) -> [transforms.transforms.RandomTransforms, ...]:
+def augmentation_transforms(config : Config) -> [transforms.transforms.RandomTransforms, ...]:
 	"""
 	Tranforms the image for use by a CNN
 	also adds image augmentations for rotations and flips
@@ -123,8 +130,8 @@ def cnn_training_transform(config : Config) -> transforms.Compose:
 
 	"""
 	transforms_to_run = []
-	transforms_to_run.extend(augmentation_transform(config))
-	transforms_to_run.extend(image_shaping_transform(config))
+	transforms_to_run.extend(augmentation_transforms(config))
+	transforms_to_run.append(image_shaping_transform(config))
 	transforms_to_run.extend(transform_for_neural_network_formating())
 	transform_compose = transforms.Compose(transforms_to_run)
 
@@ -132,7 +139,7 @@ def cnn_training_transform(config : Config) -> transforms.Compose:
 
 def cnn_inferencing_transform(config : Config) -> transforms.Compose:
 	"""
-	Full set of transforms to prepair data for INFERENCING on a CNN from the configuration settings
+	Full set of transforms to prepare data for INFERENCING on a CNN from the configuration settings
 
 	Args:
 		config: configuration class
@@ -142,9 +149,9 @@ def cnn_inferencing_transform(config : Config) -> transforms.Compose:
 
 	"""
 
-	transform = transforms.Compose([
-		image_shaping_transform(config),
-		transform_for_neural_network_formating()
-	])
+	transforms_to_run = []
+	transforms_to_run.append(image_shaping_transform(config))
+	transforms_to_run.extend(transform_for_neural_network_formating())
+	transform = transforms.Compose(transforms_to_run)
 
 	return transform

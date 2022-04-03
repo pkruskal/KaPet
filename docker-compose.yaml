@@ -1,12 +1,36 @@
 version: "3.9"
 services:
   kapet:
-    build: .
+    build:
+      context: .
+      target: kapet
     image: kapet
+    ports:
+      - 8888:8888
+    volumes:
+      - ./lib:/home/kapet/lib
+      - ./input:/home/kapet/input
+      - ./notebooks:/home/kapet/notebooks
+    entrypoint: "jupyter lab --ip 0.0.0.0 --no-browser --allow-root"  # start jupyter lab
+
+  kapet_gpu:
+    build:
+      context: .
+      target: kapet_gpu
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [ gpu ]
+    image: kapet_gpu
     ports:
     - 8888:8888
     volumes:
       - ./lib:/home/kapet/lib
       - ./input:/home/kapet/input
+      - ./notebooks:/home/kapet/notebooks
+      - ./experiments:/home/kapet/experiments
     entrypoint: "jupyter lab --ip 0.0.0.0 --no-browser --allow-root"  # start jupyter lab
 

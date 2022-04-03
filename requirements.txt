@@ -12,3 +12,7 @@ scikit-image
 PyYAML
 pandas
 jupyterlab
+psutil
+tez
+timm
+tensorboard

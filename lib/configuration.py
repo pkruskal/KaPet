@@ -4,7 +4,7 @@ from pydantic import BaseModel
 import yaml
 from pathlib import Path
 
-class LearningRateConfig(BaseModel):
+class LearningRateSchedulerConfig(BaseModel):
 	"""
 	Args:
 		epocs: (List[int])
@@ -28,14 +28,16 @@ class CNNConfig(BaseModel):
 	"""
 	Args:
 		model_configuraton: (str) model configuration
-		batchsize: (int) batch size
+		batch_size: (int) batch_size*batch_accumilation is the number of images to calculate loss before updating weights
+		batch_accumilation: (int) used with batch_size if the desired batch size can't fit in GPU memory
 		epocs: (int) epocs
 		learning_rate: (LearningRateConfig)
 	"""
-	model_configuraton: str
+	model_configuration: str
 	batch_size: int
+	batch_accumilation : int
 	epocs: int
-	learning_rate: LearningRateConfig
+	learning_rate: float
 
 
 class RegressionConfig(BaseModel):
@@ -70,6 +72,7 @@ class Config(BaseModel):
 		rotation_augmentations: (int) +/- in degrees
 		translation_augmentations: (int) % translation of image before resizing
 		cnn_config: (CNNConfig) configuration for CNN
+		regression_config: (RegressionConfig) configuration for the regression step of the CNN
 	"""
 	image_dimension: int
 	image_shaping : ImageShapings
