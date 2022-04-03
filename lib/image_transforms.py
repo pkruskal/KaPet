@@ -1,6 +1,6 @@
 from torchvision import transforms
 from PIL import Image
-from configuration import Config
+from lib.configuration import Config
 import numpy as np
 from typing import Union, List
 

@@ -9,10 +9,11 @@ from torch import cat as concat_tensors
 # torch helper imports
 import tez
 import timm
+from .base_image_regression_model import BaseRegressionModel
 
 from lib.utils import RMSELoss
 
-class BaseRegressionModel(tez.Model):
+class BaseClassificationModel(BaseRegressionModel):
     """
     This base generic model makes use of the torch image models module (timm)
     and adheres to the tez.model framework by adding a loss method and a monitor_metrics
@@ -31,11 +32,7 @@ class BaseRegressionModel(tez.Model):
             self,
             model_name : str,
             learning_rate : float,
-            number_of_latent_image_features : int,
-            number_of_additional_features : int,
-            number_of_intermediate_regression_variables : int,
-            regression_dropout : float,
-            regression_activation_function : nn.Module = nn.Identity(),
+            loss_function: nn.Module = nn.BCEWithLogitsLoss(),
             **kwargs
     ) -> nn.Module:
 
@@ -56,26 +53,18 @@ class BaseRegressionModel(tez.Model):
         super().__init__()
 
         self.learning_rate = learning_rate
+        self.loss_function = loss_function
 
         # this will need to be overridden to provide the right outputs of <number_of_latent_image_features>
         self.model = timm.create_model(
             model_name
         )
 
-        # set up regression architecture for outputting pawpularity from CNN backbone and other features
-        self.dropout = nn.Dropout(regression_dropout)
-
-        # linear module is simple regression y=xA'+b
-        number_of_dense1_inputs = number_of_latent_image_features + number_of_additional_features
-        self.dense1 = nn.Linear(number_of_dense1_inputs, number_of_intermediate_regression_variables)
-        self.activation_function = regression_activation_function
-        self.dense2 = nn.Linear(number_of_intermediate_regression_variables, 1)
 
     def loss(
             self,
             estimates : Tensor,
             targets: Optional[Tensor] = None,
-            loss_function: nn.Module = RMSELoss()
     ) -> Tensor:
         """
         Calculate the loss between our pawpular estimates and the pawpular targets. If there are no targets then
@@ -94,7 +83,12 @@ class BaseRegressionModel(tez.Model):
         if targets == None:
             loss = Tensor([0])
         else:
-            loss = loss_function(estimates.float(), targets.float())
+            # turn the target into a one hot vector for loss
+            output_classes = nn.functional.one_hot(targets, len(estimates[0]))
+            self.loss_function(
+                estimates.float(),
+                output_classes.float()
+            )
 
         return loss
 
@@ -111,13 +105,27 @@ class BaseRegressionModel(tez.Model):
         """
         if type(targets) == Tensor:
 
-            sum_squared_error = nn.MSELoss(reduction="sum")(prediction, targets)
-            standard_error = (sum_squared_error.sqrt() / (prediction.shape[0] - 2))
+            output_classes = nn.functional.one_hot(targets, len(prediction[0])).float()
+            binary_multiclass_loss = nn.BCEWithLogitsLoss()(
+                prediction.float(),
+                output_classes
+            )
+            cross_entropy_loss = nn.CrossEntropyLoss()(
+                prediction.float(),
+                output_classes
+            )
+
+            # go back to numeric value from clasification
+            bin_prediction = nn.functional.softmax(prediction)
+            numeric_prediction = 100*(bin_prediction-0.5)/self.number_of_classes
+            numeric_targets = 100*(targets-0.5)/self.number_of_classes
+
+
 
             metrics = {
-                "sum_squared_error": sum_squared_error,
-                "standard_error": standard_error
-            }
+                    "binary_multiclass_loss": binary_multiclass_loss,
+                    "cross_entropy_loss": cross_entropy_loss
+                }
         else:
             metrics = {
 

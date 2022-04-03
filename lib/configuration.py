@@ -4,7 +4,7 @@ from pydantic import BaseModel
 import yaml
 from pathlib import Path
 
-class LearningRateConfig(BaseModel):
+class LearningRateSchedulerConfig(BaseModel):
 	"""
 	Args:
 		epocs: (List[int])
@@ -37,7 +37,7 @@ class CNNConfig(BaseModel):
 	batch_size: int
 	batch_accumilation : int
 	epocs: int
-	learning_rate: LearningRateConfig
+	learning_rate: float
 
 
 class RegressionConfig(BaseModel):
